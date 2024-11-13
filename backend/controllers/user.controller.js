@@ -92,6 +92,7 @@ export const getSuggestedUser = async (req, res) => {
     }
 }
 
+
 export const updateUserProfile = async (req, res) => {
     const { fullName, email, userName, currentPassword, newPassword, bio, link} = req.body;
     let {profileImg, coverImg} = req.body;
