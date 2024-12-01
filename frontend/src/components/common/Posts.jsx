@@ -37,6 +37,7 @@ const Posts = ({feedType}) => {
 			}
 		},
 	});
+	
 
 	useEffect(() => {
 		refetch();
