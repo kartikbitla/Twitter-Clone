@@ -6,10 +6,10 @@ import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 
 export const getUserProfile = async (req, res) => {
-    const {username} = req.params;
+    const {userName} = req.params;
 
     try{
-        let user = await User.findOne({username}).select("-passsword");
+        let user = await User.findOne({userName}).select("-passsword");
         if(!user){
             return res.status(404).json({error:"User not found"});
         }
