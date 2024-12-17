@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useParams } from "react-router-dom";
+import { useQuery} from "@tanstack/react-query";
 import Posts from "../../components/common/Posts";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
 import EditProfileModal from "./EditProfileModal";
@@ -22,20 +22,25 @@ const ProfilePage = () => {
 	const coverImgRef = useRef(null);
 	const profileImgRef = useRef(null);
 
-	const isLoading = false;
+	const {userName} = useParams();
 	const isMyProfile = true;
 
-	const user = {
-		_id: "1",
-		fullName: "John Doe",
-		username: "johndoe",
-		profileImg: "/avatars/boy2.png",
-		coverImg: "/cover.png",
-		bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-		link: "https://youtube.com/@asaprogrammer_",
-		following: ["1", "2", "3"],
-		followers: ["1", "2", "3"],
-	};
+	const {data:user, isLoading} = useQuery({
+		queryKey:["userProfile"],
+		queryFn: async () => {
+			try{
+				const res = await fetch(`/api/users/profile/${userName}`);
+				const data = await res.json();
+
+				if(!res.ok){
+					throw new Error(data.error || "Something went wrong");
+				}
+				return data;
+			}catch(error){
+				throw new Error(error);
+			}
+		}
+	})
 
 	const handleImgChange = (e, state) => {
 		const file = e.target.files[0];
@@ -135,7 +140,7 @@ const ProfilePage = () => {
 							<div className='flex flex-col gap-4 mt-14 px-4'>
 								<div className='flex flex-col'>
 									<span className='font-bold text-lg'>{user?.fullName}</span>
-									<span className='text-sm text-slate-500'>@{user?.username}</span>
+									<span className='text-sm text-slate-500'>@{user?.userName}</span>
 									<span className='text-sm my-1'>{user?.bio}</span>
 								</div>
 
