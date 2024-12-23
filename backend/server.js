@@ -35,6 +35,17 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationRoutes);
 
+app.use((req, res, next) => {
+    res.cookie('user_id', '12345', {
+      httpOnly: true, // Prevents access to cookie via JavaScript (adds security)
+      secure: true, // Ensures cookie is sent over HTTPS
+      sameSite: 'Lax', // Restricts cookie sending to first-party contexts
+      maxAge: 3600000 // Optional: Expiry time in milliseconds (1 hour)
+    });
+    next();
+  });
+  
+
 if(process.env.NODE_ENV === "production"){
     app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
